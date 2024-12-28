@@ -4,5 +4,7 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+**Ntopia** means **U**topia with my last name.
+Okay, but that really doesn't mean **Dystopia**!
+
+I'll be updating some everyday stories, memorable experiences, and little musings here. You're always welcome to drop by and have a read! :-)

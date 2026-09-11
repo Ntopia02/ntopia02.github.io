@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'zh-CN' }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f2ee">
+    {% seo %}
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/img/favicons/favicon-32x32.png' | relative_url }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/img/favicons/apple-touch-icon.png' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/archive-home.css' | relative_url }}">
+    <script defer src="{{ '/assets/js/archive-home.js' | relative_url }}"></script>
+  </head>
+
+  <body>
+    <div class="ambient-grid" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="identity" href="{{ '/' | relative_url }}" aria-label="返回首页">
+        <span class="identity-mark">N</span>
+        <span>
+          <strong>{{ site.title }}</strong>
+          <small>DIGITAL FIELD ARCHIVE</small>
+        </span>
+      </a>
+
+      <nav class="utility-nav" aria-label="站点导航">
+        <a href="{{ '/archives/' | relative_url }}">归档</a>
+        <a href="{{ '/categories/' | relative_url }}">分类</a>
+        <a href="{{ '/about/' | relative_url }}">INFO</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="archive-title">
+        <div>
+          <p class="eyebrow">NTOPIA / PERSONAL RECORDS</p>
+          <h1 id="archive-title">思想与生活的<br><span>开放档案库</span></h1>
+        </div>
+
+        <div class="hero-note">
+          <p>{{ site.tagline }}</p>
+          <span>{{ site.posts | size }} FILES · {{ site.categories | size }} COLLECTIONS</span>
+        </div>
+      </section>
+
+      {% assign column_count = site.categories | size | plus: 1 %}
+      <section class="archive-viewport" aria-label="文章分类档案">
+        <div class="archive-grid" style="--column-count: {{ column_count }}">
+          {% for category in site.categories %}
+            {% assign tone_index = forloop.index0 | modulo: 4 %}
+            <section class="archive-column tone-{{ tone_index }}" aria-labelledby="category-{{ forloop.index }}">
+              <header class="column-header">
+                <div>
+                  <span class="column-index">COL. {{ forloop.index }}</span>
+                  <h2 id="category-{{ forloop.index }}">{{ category[0] }}</h2>
+                </div>
+                <span class="file-count">{{ category[1] | size | prepend: '0' | slice: -2, 2 }}</span>
+              </header>
+
+              <div class="file-stack">
+                {% for post in category[1] %}
+                  {% assign cover = post.home_cover %}
+                  {% unless cover %}
+                    {% if post.image.path %}
+                      {% assign cover = post.image.path %}
+                    {% elsif post.image %}
+                      {% assign cover = post.image %}
+                    {% endif %}
+                  {% endunless %}
+
+                  <a
+                    class="archive-card{% if cover %} has-cover{% endif %}"
+                    href="{{ post.url | relative_url }}"
+                    data-tilt
+                    style="--card-index: {{ forloop.index0 }}"
+                    aria-label="打开文章：{{ post.title | escape }}"
+                  >
+                    <span class="card-depth" aria-hidden="true"></span>
+                    <article class="card-surface">
+                      <div class="file-code">
+                        <span>NT-{{ forloop.parentloop.index }}.{{ forloop.index }}</span>
+                        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
+                      </div>
+
+                      {% if cover %}
+                        <figure class="file-cover">
+                          <img
+                            src="{{ cover | relative_url }}"
+                            alt="{{ post.image.alt | default: post.title | escape }}"
+                            loading="lazy"
+                          >
+                        </figure>
+                      {% else %}
+                        <div class="file-abstract" aria-hidden="true">
+                          <span></span><span></span><span></span><span></span>
+                        </div>
+                      {% endif %}
+
+                      <div class="file-copy">
+                        <p>{{ category[0] }} / DOCUMENT</p>
+                        <h3>{{ post.title }}</h3>
+                        {% if post.description %}<span>{{ post.description }}</span>{% endif %}
+                      </div>
+
+                      <div class="file-action">
+                        <span>ACCESS FILE</span>
+                        <b aria-hidden="true">↗</b>
+                      </div>
+                    </article>
+                  </a>
+                {% endfor %}
+              </div>
+            </section>
+          {% endfor %}
+
+          <section class="archive-column info-column" aria-labelledby="info-column-title">
+            <header class="column-header">
+              <div>
+                <span class="column-index">COL. {{ column_count }}</span>
+                <h2 id="info-column-title">INFO</h2>
+              </div>
+              <span class="file-count">SYS</span>
+            </header>
+
+            <div class="file-stack info-stack">
+              <a class="archive-card info-card info-primary" href="{{ '/about/' | relative_url }}" data-tilt style="--card-index: 0">
+                <span class="card-depth" aria-hidden="true"></span>
+                <article class="card-surface">
+                  <div class="file-code"><span>PROFILE.01</span><span>ABOUT</span></div>
+                  <div class="profile-mark" aria-hidden="true">N</div>
+                  <div class="file-copy">
+                    <p>PERSONAL RECORD</p>
+                    <h3>关于我</h3>
+                    <span>你好呀，欢迎来到我的数字自留地。</span>
+                  </div>
+                  <div class="file-action"><span>OPEN PROFILE</span><b aria-hidden="true">↗</b></div>
+                </article>
+              </a>
+
+              <a class="archive-card info-card compact-card" href="{{ '/archives/' | relative_url }}" data-tilt style="--card-index: 1">
+                <span class="card-depth" aria-hidden="true"></span>
+                <article class="card-surface">
+                  <div class="file-code"><span>INDEX.02</span><span>{{ site.posts | size }} FILES</span></div>
+                  <div class="file-copy">
+                    <p>MASTER INDEX</p>
+                    <h3>全部归档</h3>
+                  </div>
+                  <div class="file-action"><span>VIEW TIMELINE</span><b aria-hidden="true">→</b></div>
+                </article>
+              </a>
+
+              <a class="archive-card info-card compact-card" href="{{ '/tags/' | relative_url }}" data-tilt style="--card-index: 2">
+                <span class="card-depth" aria-hidden="true"></span>
+                <article class="card-surface">
+                  <div class="file-code"><span>INDEX.03</span><span>KEYWORDS</span></div>
+                  <div class="file-copy">
+                    <p>REFERENCE SYSTEM</p>
+                    <h3>标签索引</h3>
+                  </div>
+                  <div class="file-action"><span>BROWSE TAGS</span><b aria-hidden="true">→</b></div>
+                </article>
+              </a>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p><span class="status-dot"></span> ARCHIVE ONLINE</p>
+      <p>向下浏览档案 · 悬停查看细节</p>
+      <p>© {{ 'now' | date: '%Y' }} {{ site.social.name | default: site.title }}</p>
+    </footer>
+  </body>
+</html>

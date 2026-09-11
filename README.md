@@ -29,6 +29,29 @@ latest version of the **Chirpy** theme and the [CD][CD] workflow to here, so tha
 
 Check out the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy/wiki).
 
+## 首页内容配置
+
+首页会读取文章 front matter 中的 `categories`，每个分类自动形成一列；新增分类不需要修改首页布局。
+
+文章封面默认沿用 Chirpy 的 `image.path`：
+
+```yaml
+categories:
+  - 说学逗唱
+image:
+  path: /assets/img/posts/example/cover.webp
+  alt: 封面说明
+```
+
+如果文章页与首页想使用不同图片，可以额外设置 `home_cover`：
+
+```yaml
+home_cover: /assets/img/posts/example/home-cover.webp
+```
+
+没有配置图片时，首页会自动显示该分类对应的纯色档案封面。首页结构、样式和交互分别位于
+`_layouts/archive-home.html`、`assets/css/archive-home.css` 和 `assets/js/archive-home.js`。
+
 ## Contributing
 
 This repository is automatically updated with new releases from the theme repository. If you encounter any issues or want to contribute to its improvement, please visit the [theme repository][chirpy] to provide feedback.

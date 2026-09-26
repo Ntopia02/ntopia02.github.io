@@ -38,7 +38,7 @@
             </section>
           {% endfor %}
           <section class="archive-row info-row" aria-labelledby="info-title">
-            <h1 class="row-title" id="info-title">INFO</h1>
+            <h1 class="row-title" id="info-title">我</h1>
             <div class="row-track" id="track-info">
               {% assign info_paths = 'about,archives,tags' | split: ',' %}
               {% assign info_titles = '关于我,全部归档,标签' | split: ',' %}
@@ -50,7 +50,7 @@
                 {% include archive-block.html url=info_url title=info_title category='INFO' description=info_description %}
               {% endfor %}
             </div>
-            {% include archive-scrollbar.html track='track-info' label='INFO' %}
+            {% include archive-scrollbar.html track='track-info' label='我' %}
           </section>
         </div>
       </div>

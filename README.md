@@ -31,7 +31,7 @@ Check out the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy/wi
 
 ## 首页内容配置
 
-首页会读取文章 front matter 中的 `categories`，每个分类自动形成一行倾斜排列的立体档案；新增分类不需要修改首页布局。INFO 另占一行。
+首页会读取文章 front matter 中的 `categories`，每个分类自动形成一行倾斜排列的立体档案；新增分类不需要修改首页布局。“我”另占一行。分类标题占用独立空间，不与滑动条挤在一起。
 
 文章封面默认沿用 Chirpy 的 `image.path`：
 
@@ -49,11 +49,11 @@ image:
 home_cover: /assets/img/posts/example/home-cover.webp
 ```
 
-首页的方块统一为白色，INFO 行为灰色。悬停或键盘聚焦方块后，旁边显示标题、日期、简介和彩色封面；未配置封面的文章只显示文字信息。
+首页的方块统一为白色，“我”这一行为灰色。悬停或键盘聚焦方块后，旁边显示标题、日期、简介和彩色封面；未配置封面的文章只显示文字信息。
 
-每行下方的立体滑动条在悬停时出现，可以拖动浏览超出显示范围的文章，也支持聚焦后按方向键、Home / End，以及横向触控板滚动或 Shift + 滚轮。所有方块已显示时，滑动条铺满且不可拖动。手机上滑动条常显，横向滑动也可浏览；轻触方块预览，再次轻触或点击预览标题进入文章。
+每行下方的滑动条在悬停时像活塞一样升起，离开后慢慢降回地面；顶面与背景同色，侧面沿用所在行方块的颜色。拖动可浏览文章，也支持聚焦后按方向键、Home / End，以及横向触控板滚动或 Shift + 滚轮。滑块长度按可视范围与内容总长度的比例自动缩放。短列表仍可拖动，两端会产生有阻力的弹性位移，松手后回弹；长列表到达边缘时也有同样反馈。手机上滑动条常显，横向滑动也可浏览；轻触方块预览，再次轻触或点击预览标题进入文章。系统开启“减少动态效果”时，回落与回弹会立即完成。
 
-首页结构位于 `_layouts/archive-home.html`，方块与滑动条模板在 `_includes/archive-block.html` 和 `_includes/archive-scrollbar.html`。样式位于 `assets/css/archive-home.css`，交互位于 `assets/js/archive-home.js`。`--angle-x`、`--angle-z` 控制整个排列平面的倾斜角度，`--depth` 控制厚度，`--card-gap` 和 `--row-gap` 控制块间及行间距离。
+首页结构位于 `_layouts/archive-home.html`，方块与滑动条模板在 `_includes/archive-block.html` 和 `_includes/archive-scrollbar.html`。样式位于 `assets/css/archive-home.css`，交互位于 `assets/js/archive-home.js`。`--angle-x`、`--angle-z` 控制整个排列平面的倾斜角度，`--depth` 控制厚度，`--card-gap` 和 `--row-gap` 控制块间及行间距离，`--title-space` 给标题留出独立空间，`--rail-hit-height` 控制滑动条的可操作范围。
 
 ## Contributing
 

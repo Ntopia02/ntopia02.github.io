@@ -3,173 +3,67 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f3f2ee">
+    <meta name="theme-color" content="#f2f1ed">
     {% seo %}
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/img/favicons/favicon-32x32.png' | relative_url }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/img/favicons/apple-touch-icon.png' | relative_url }}">
+    <link rel="icon" href="{{ '/assets/img/favicons/favicon-32x32.png' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/archive-home.css' | relative_url }}">
     <script defer src="{{ '/assets/js/archive-home.js' | relative_url }}"></script>
   </head>
-
   <body>
-    <div class="ambient-grid" aria-hidden="true"></div>
-
     <header class="site-header">
-      <a class="identity" href="{{ '/' | relative_url }}" aria-label="返回首页">
-        <span class="identity-mark">N</span>
-        <span>
-          <strong>{{ site.title }}</strong>
-          <small>DIGITAL FIELD ARCHIVE</small>
-        </span>
-      </a>
-
-      <nav class="utility-nav" aria-label="站点导航">
-        <a href="{{ '/archives/' | relative_url }}">归档</a>
-        <a href="{{ '/categories/' | relative_url }}">分类</a>
-        <a href="{{ '/about/' | relative_url }}">INFO</a>
-      </nav>
+      <a class="identity" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <p>{{ site.tagline }}</p>
     </header>
-
-    <main>
-      <section class="hero" aria-labelledby="archive-title">
-        <div>
-          <p class="eyebrow">NTOPIA / PERSONAL RECORDS</p>
-          <h1 id="archive-title">思想与生活的<br><span>开放档案库</span></h1>
-        </div>
-
-        <div class="hero-note">
-          <p>{{ site.tagline }}</p>
-          <span>{{ site.posts | size }} FILES · {{ site.categories | size }} COLLECTIONS</span>
-        </div>
-      </section>
-
-      {% assign column_count = site.categories | size | plus: 1 %}
-      <section class="archive-viewport" aria-label="文章分类档案">
-        <div class="archive-grid" style="--column-count: {{ column_count }}">
+    <main class="archive-workspace" aria-label="文章档案">
+      <div class="archive-stage">
+        <div class="archive-scene">
           {% for category in site.categories %}
-            {% assign tone_index = forloop.index0 | modulo: 4 %}
-            <section class="archive-column tone-{{ tone_index }}" aria-labelledby="category-{{ forloop.index }}">
-              <header class="column-header">
-                <div>
-                  <span class="column-index">COL. {{ forloop.index }}</span>
-                  <h2 id="category-{{ forloop.index }}">{{ category[0] }}</h2>
-                </div>
-                <span class="file-count">{{ category[1] | size | prepend: '0' | slice: -2, 2 }}</span>
-              </header>
-
-              <div class="file-stack">
+            {% assign category_name = category[0] %}
+            <section class="archive-row" aria-labelledby="category-{{ forloop.index }}">
+              <h1 class="row-title" id="category-{{ forloop.index }}">{{ category[0] }}</h1>
+              <div class="row-track" id="track-{{ forloop.index }}">
                 {% for post in category[1] %}
-                  {% assign cover = post.home_cover %}
-                  {% unless cover %}
-                    {% if post.image.path %}
-                      {% assign cover = post.image.path %}
-                    {% elsif post.image %}
-                      {% assign cover = post.image %}
-                    {% endif %}
-                  {% endunless %}
-
-                  <a
-                    class="archive-card{% if cover %} has-cover{% endif %}"
-                    href="{{ post.url | relative_url }}"
-                    data-tilt
-                    style="--card-index: {{ forloop.index0 }}"
-                    aria-label="打开文章：{{ post.title | escape }}"
-                  >
-                    <span class="card-depth" aria-hidden="true"></span>
-                    <article class="card-surface">
-                      <div class="file-code">
-                        <span>NT-{{ forloop.parentloop.index }}.{{ forloop.index }}</span>
-                        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
-                      </div>
-
-                      {% if cover %}
-                        <figure class="file-cover">
-                          <img
-                            src="{{ cover | relative_url }}"
-                            alt="{{ post.image.alt | default: post.title | escape }}"
-                            loading="lazy"
-                          >
-                        </figure>
-                      {% else %}
-                        <div class="file-abstract" aria-hidden="true">
-                          <span></span><span></span><span></span><span></span>
-                        </div>
-                      {% endif %}
-
-                      <div class="file-copy">
-                        <p>{{ category[0] }} / DOCUMENT</p>
-                        <h3>{{ post.title }}</h3>
-                        {% if post.description %}<span>{{ post.description }}</span>{% endif %}
-                      </div>
-
-                      <div class="file-action">
-                        <span>ACCESS FILE</span>
-                        <b aria-hidden="true">↗</b>
-                      </div>
-                    </article>
-                  </a>
+                  {% assign cover = post.home_cover | default: post.image.path | default: post.image %}
+                  {% assign cover_url = '' %}
+                  {% if cover %}
+                    {% capture cover_url %}{% include media-url.html src=cover subpath=post.media_subpath %}{% endcapture %}
+                  {% endif %}
+                  {% assign description = post.description | default: post.excerpt | strip_html | truncate: 180 %}
+                  {% assign date_label = post.date | date: '%Y.%m.%d' %}
+                  {% include archive-block.html url=post.url title=post.title category=category_name description=description date=date_label cover=cover_url %}
                 {% endfor %}
               </div>
+              {% assign track_id = forloop.index | prepend: 'track-' %}
+              {% include archive-scrollbar.html track=track_id label=category_name %}
             </section>
           {% endfor %}
-
-          <section class="archive-column info-column" aria-labelledby="info-column-title">
-            <header class="column-header">
-              <div>
-                <span class="column-index">COL. {{ column_count }}</span>
-                <h2 id="info-column-title">INFO</h2>
-              </div>
-              <span class="file-count">SYS</span>
-            </header>
-
-            <div class="file-stack info-stack">
-              <a class="archive-card info-card info-primary" href="{{ '/about/' | relative_url }}" data-tilt style="--card-index: 0">
-                <span class="card-depth" aria-hidden="true"></span>
-                <article class="card-surface">
-                  <div class="file-code"><span>PROFILE.01</span><span>ABOUT</span></div>
-                  <div class="profile-mark" aria-hidden="true">N</div>
-                  <div class="file-copy">
-                    <p>PERSONAL RECORD</p>
-                    <h3>关于我</h3>
-                    <span>你好呀，欢迎来到我的数字自留地。</span>
-                  </div>
-                  <div class="file-action"><span>OPEN PROFILE</span><b aria-hidden="true">↗</b></div>
-                </article>
-              </a>
-
-              <a class="archive-card info-card compact-card" href="{{ '/archives/' | relative_url }}" data-tilt style="--card-index: 1">
-                <span class="card-depth" aria-hidden="true"></span>
-                <article class="card-surface">
-                  <div class="file-code"><span>INDEX.02</span><span>{{ site.posts | size }} FILES</span></div>
-                  <div class="file-copy">
-                    <p>MASTER INDEX</p>
-                    <h3>全部归档</h3>
-                  </div>
-                  <div class="file-action"><span>VIEW TIMELINE</span><b aria-hidden="true">→</b></div>
-                </article>
-              </a>
-
-              <a class="archive-card info-card compact-card" href="{{ '/tags/' | relative_url }}" data-tilt style="--card-index: 2">
-                <span class="card-depth" aria-hidden="true"></span>
-                <article class="card-surface">
-                  <div class="file-code"><span>INDEX.03</span><span>KEYWORDS</span></div>
-                  <div class="file-copy">
-                    <p>REFERENCE SYSTEM</p>
-                    <h3>标签索引</h3>
-                  </div>
-                  <div class="file-action"><span>BROWSE TAGS</span><b aria-hidden="true">→</b></div>
-                </article>
-              </a>
+          <section class="archive-row info-row" aria-labelledby="info-title">
+            <h1 class="row-title" id="info-title">INFO</h1>
+            <div class="row-track" id="track-info">
+              {% assign info_paths = 'about,archives,tags' | split: ',' %}
+              {% assign info_titles = '关于我,全部归档,标签' | split: ',' %}
+              {% assign info_descriptions = '你好呀，欢迎来到我的数字自留地。,按时间查看所有文章。,从标签出发，寻找感兴趣的内容。' | split: ',' %}
+              {% for path in info_paths %}
+                {% assign info_url = path | prepend: '/' | append: '/' %}
+                {% assign info_title = info_titles[forloop.index0] %}
+                {% assign info_description = info_descriptions[forloop.index0] %}
+                {% include archive-block.html url=info_url title=info_title category='INFO' description=info_description %}
+              {% endfor %}
             </div>
+            {% include archive-scrollbar.html track='track-info' label='INFO' %}
           </section>
         </div>
-      </section>
+      </div>
+      <aside class="article-preview" aria-label="文章预览" hidden>
+        <img class="preview-cover" src="{{ '/assets/img/favicons/favicon-32x32.png' | relative_url }}" alt="文章封面" hidden>
+        <div class="preview-copy">
+          <p class="preview-category"></p>
+          <h2><a class="preview-link" href="{{ '/archives/' | relative_url }}"></a></h2>
+          <time class="preview-date" hidden></time>
+          <p class="preview-description"></p>
+        </div>
+      </aside>
     </main>
-
-    <footer class="site-footer">
-      <p><span class="status-dot"></span> ARCHIVE ONLINE</p>
-      <p>向下浏览档案 · 悬停查看细节</p>
-      <p>© {{ 'now' | date: '%Y' }} {{ site.social.name | default: site.title }}</p>
-    </footer>
+    <footer>© {{ 'now' | date: '%Y' }} {{ site.social.name | default: site.title }}</footer>
   </body>
 </html>

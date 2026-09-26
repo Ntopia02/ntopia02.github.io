@@ -1,0 +1,16 @@
+<a class="archive-card" href="{{ include.url | relative_url }}"
+  aria-label="{{ include.title | escape }}"
+  data-title="{{ include.title | escape }}"
+  data-category="{{ include.category | escape }}"
+  data-description="{{ include.description | strip | escape }}"
+  data-date="{{ include.date | escape }}"
+  data-cover="{{ include.cover | strip | escape }}">
+  <span class="block-shadow" aria-hidden="true"></span>
+  <span class="block">
+    <span class="block-front" aria-hidden="true"></span>
+    <span class="block-side" aria-hidden="true"></span>
+    <span class="block-top">
+      <span class="block-content"><span class="block-title">{{ include.title }}</span></span>
+    </span>
+  </span>
+</a>
